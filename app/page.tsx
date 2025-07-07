@@ -1,10 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import styles from "./dashboard.module.css"
 import { Search, RefreshCw, Shield, Users, UserCheck, ChevronRight, ChevronDown, Mail, User } from "lucide-react"
 
 // Mock data structure
@@ -67,7 +64,6 @@ export default function AdminRolesDashboard() {
     if (!searchTerm) return mockData.roles
 
     if (searchMode === "users") {
-      // Search for users and return their roles
       const userRoles = mockData.roles.filter((role) =>
         role.members.some(
           (member) =>
@@ -78,7 +74,6 @@ export default function AdminRolesDashboard() {
       )
       return userRoles
     } else {
-      // Search for roles
       return mockData.roles.filter(
         (role) =>
           role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -112,184 +107,161 @@ export default function AdminRolesDashboard() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // In a real app, you would fetch fresh data from your API here
-    // const freshData = await fetchRolesData()
-
     console.log("Data refreshed successfully!")
     setIsRefreshing(false)
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Shield className="h-8 w-8 text-natwest-purple" />
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <Shield className={styles.headerIcon} />
             <div>
-              <h1 className="text-3xl font-bold text-natwest-purple">Admin Roles Dashboard</h1>
-              <p className="text-gray-600 mt-1">Manage user roles and permissions across your organization</p>
+              <h1 className={styles.title}>Admin Roles Dashboard</h1>
+              <p className={styles.subtitle}>Manage user roles and permissions across your organization</p>
             </div>
           </div>
-          <Button
-            variant="outline"
+          <button
+            className={`${styles.button} ${styles.buttonOutline} ${isRefreshing ? styles.buttonDisabled : ""}`}
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="border-natwest-purple text-natwest-purple hover:bg-natwest-purple hover:text-white bg-transparent disabled:opacity-50"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+            <RefreshCw className={`${styles.buttonIcon} ${isRefreshing ? styles.spinning : ""}`} />
             {isRefreshing ? "Refreshing..." : "Refresh Data"}
-          </Button>
+          </button>
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="border-l-4 border-l-natwest-purple">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-natwest-purple/10 rounded-full">
-                  <Shield className="h-6 w-6 text-natwest-purple" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-natwest-purple">{totalRoles}</p>
-                  <p className="text-gray-600">Total Roles</p>
-                </div>
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={styles.statIconWrapper}>
+                <Shield className={styles.statIcon} />
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <p className={styles.statNumber}>{totalRoles}</p>
+                <p className={styles.statLabel}>Total Roles</p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="border-l-4 border-l-natwest-purple">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-natwest-purple/10 rounded-full">
-                  <Users className="h-6 w-6 text-natwest-purple" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-natwest-purple">{uniqueUsers}</p>
-                  <p className="text-gray-600">Unique Users</p>
-                </div>
+          <div className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={styles.statIconWrapper}>
+                <Users className={styles.statIcon} />
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <p className={styles.statNumber}>{uniqueUsers}</p>
+                <p className={styles.statLabel}>Unique Users</p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="border-l-4 border-l-natwest-purple">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-natwest-purple/10 rounded-full">
-                  <UserCheck className="h-6 w-6 text-natwest-purple" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-natwest-purple">{totalAssignments}</p>
-                  <p className="text-gray-600">Total Assignments</p>
-                </div>
+          <div className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={styles.statIconWrapper}>
+                <UserCheck className={styles.statIcon} />
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <p className={styles.statNumber}>{totalAssignments}</p>
+                <p className={styles.statLabel}>Total Assignments</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search Bar */}
-        <div className="flex gap-4 items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
+        <div className={styles.searchContainer}>
+          <div className={styles.searchInputWrapper}>
+            <Search className={styles.searchIcon} />
+            <input
+              type="text"
               placeholder="Search roles or members..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-gray-300 focus:border-natwest-purple focus:ring-natwest-purple"
+              className={styles.searchInput}
             />
           </div>
-          <Button
-            variant={searchMode === "users" ? "default" : "outline"}
+          <button
+            className={`${styles.button} ${searchMode === "users" ? styles.buttonPrimary : styles.buttonOutline}`}
             onClick={() => setSearchMode(searchMode === "users" ? "roles" : "users")}
-            className={
-              searchMode === "users"
-                ? "bg-natwest-purple hover:bg-natwest-purple/90"
-                : "border-natwest-purple text-natwest-purple hover:bg-natwest-purple hover:text-white"
-            }
           >
-            <User className="h-4 w-4 mr-2" />
+            <User className={styles.buttonIcon} />
             Search Users
-          </Button>
+          </button>
         </div>
 
         {/* Expand/Collapse Controls */}
-        <div className="flex gap-4">
-          <Button variant="ghost" onClick={expandAll} className="text-natwest-purple hover:bg-natwest-purple/10">
+        <div className={styles.controls}>
+          <button className={styles.controlButton} onClick={expandAll}>
             Expand All
-          </Button>
-          <Button variant="ghost" onClick={collapseAll} className="text-natwest-purple hover:bg-natwest-purple/10">
+          </button>
+          <button className={styles.controlButton} onClick={collapseAll}>
             Collapse All
-          </Button>
+          </button>
         </div>
 
         {/* Roles Section */}
         <div>
-          <h2 className="text-xl font-semibold text-natwest-purple mb-4">All Roles</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <h2 className={styles.sectionTitle}>All Roles</h2>
+          <div className={styles.rolesGrid}>
             {filteredData.map((role) => (
-              <Card key={role.id} className="border border-gray-200 hover:shadow-md transition-shadow">
-                <CardContent className="p-0">
-                  <div
-                    className="p-6 cursor-pointer flex items-center justify-between hover:bg-gray-50"
-                    onClick={() => toggleRole(role.id)}
-                  >
-                    <div className="flex items-center gap-4">
-                      {expandedRoles.has(role.id) ? (
-                        <ChevronDown className="h-5 w-5 text-natwest-purple" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-natwest-purple" />
-                      )}
-                      <Shield className="h-5 w-5 text-natwest-purple" />
-                      <div>
-                        <h3 className="font-semibold text-natwest-purple">{role.name}</h3>
-                        <p className="text-gray-600 text-sm mt-1">{role.description}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-natwest-purple" />
-                      <span className="text-natwest-purple font-medium">{role.members.length} members</span>
+              <div key={role.id} className={styles.roleCard}>
+                <div className={styles.roleHeader} onClick={() => toggleRole(role.id)}>
+                  <div className={styles.roleHeaderContent}>
+                    {expandedRoles.has(role.id) ? (
+                      <ChevronDown className={styles.chevron} />
+                    ) : (
+                      <ChevronRight className={styles.chevron} />
+                    )}
+                    <Shield className={styles.roleIcon} />
+                    <div>
+                      <h3 className={styles.roleName}>{role.name}</h3>
+                      <p className={styles.roleDescription}>{role.description}</p>
                     </div>
                   </div>
+                  <div className={styles.memberCount}>
+                    <Users className={styles.memberCountIcon} />
+                    <span>{role.members.length} members</span>
+                  </div>
+                </div>
 
-                  {expandedRoles.has(role.id) && (
-                    <div className="border-t bg-gray-50 p-6">
-                      <h4 className="font-medium text-natwest-purple mb-4">Role Members</h4>
-                      <div className="space-y-3">
-                        {role.members.map((member) => (
-                          <div key={member.id} className="flex items-center gap-4 p-3 bg-white rounded-lg border">
-                            <div className="p-2 bg-natwest-purple/10 rounded-full">
-                              <User className="h-4 w-4 text-natwest-purple" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-medium text-gray-900">{member.name}</p>
-                              <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                                <div className="flex items-center gap-1">
-                                  <Mail className="h-3 w-3" />
-                                  {member.email}
-                                </div>
-                                <Badge variant="secondary" className="bg-natwest-purple/10 text-natwest-purple">
-                                  {member.userId}
-                                </Badge>
+                {expandedRoles.has(role.id) && (
+                  <div className={styles.roleMembers}>
+                    <h4 className={styles.membersTitle}>Role Members</h4>
+                    <div className={styles.membersList}>
+                      {role.members.map((member) => (
+                        <div key={member.id} className={styles.memberCard}>
+                          <div className={styles.memberIconWrapper}>
+                            <User className={styles.memberIcon} />
+                          </div>
+                          <div className={styles.memberInfo}>
+                            <p className={styles.memberName}>{member.name}</p>
+                            <div className={styles.memberDetails}>
+                              <div className={styles.memberEmail}>
+                                <Mail className={styles.emailIcon} />
+                                {member.email}
                               </div>
+                              <span className={styles.memberBadge}>{member.userId}</span>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
 
         {filteredData.length === 0 && (
-          <div className="text-center py-12">
-            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No roles or users found matching your search.</p>
+          <div className={styles.emptyState}>
+            <Users className={styles.emptyIcon} />
+            <p className={styles.emptyText}>No roles or users found matching your search.</p>
           </div>
         )}
       </div>
