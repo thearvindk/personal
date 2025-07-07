@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --natwest-purple: #5a287a;
+    --natwest-purple-light: #7b4397;
+    --natwest-purple-dark: #4a1e63;
+  }
+}
+
+@layer utilities {
+  .text-natwest-purple {
+    color: var(--natwest-purple);
+  }
+
+  .bg-natwest-purple {
+    background-color: var(--natwest-purple);
+  }
+
+  .border-natwest-purple {
+    border-color: var(--natwest-purple);
+  }
+
+  .ring-natwest-purple {
+    --tw-ring-color: var(--natwest-purple);
+  }
+}
